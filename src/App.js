@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { ThemeProvider } from "styled-components";
+import GlobalStyles from "./styles/GlobalStyle";
+import { light } from "./styles/Theme";
+import Editor from './components/Edtior'
+import Navbar from "./components/Nav";
+import styled from "styled-components";
+import DocumentModal from "./components/models/DocumentModal";
+import PreviewModal from "./components/models/PreviewModal";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Div>
+      <GlobalStyles />
+      <ThemeProvider theme={light}>
+        <Navbar/>
+        <Editor/>
+        <DocumentModal/>
+        <PreviewModal/>
+      </ThemeProvider>
+    </Div>
   );
 }
+
+const Div = styled.div`
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+`
 
 export default App;
