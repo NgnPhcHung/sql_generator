@@ -7,6 +7,8 @@ const Card = ({ title, entity }) => {
   const [activeDrags, setActiveDrags] = useState(0);
   const [entityData, setEntityData] = useState([]);
 
+  
+
   const cardRef = useRef(null);
   useEffect(() => {
     const iggnoreKeyword = ['Foreign', '', null, undefined];
@@ -15,14 +17,17 @@ const Card = ({ title, entity }) => {
     let data = [];
 
     entityValue.map((v) => {
-      keyword.forEach(ele =>{
+      if (!v.includes("Foreign")){keyword.forEach(ele =>{
         if(v.includes(ele)) v= v.replace(ele, '')
       })
       v = v.replace(/\s/g, '');
       if (!iggnoreKeyword.includes(v.split(':')[0])) {
         data.push(v);
-      }
+      }}
     });
+    data.map(v =>{
+      console.log(title, v.split(':')[0]);
+    })
     setEntityData(data);
   }, [entity]);
   return (
@@ -39,7 +44,7 @@ const Card = ({ title, entity }) => {
 
 const CardContainer = styled.div`
   min-width: 5rem;
-  max-width: 15rem;
+  /* max-width: 15rem; */
   width: 100%;
   height: fit-content;
   display: flex;

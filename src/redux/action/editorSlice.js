@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {transferString} from '../../helpers/formatFile'
 
 const editorSlice = createSlice({
   name: "editor",
@@ -18,7 +19,9 @@ const editorSlice = createSlice({
     },
     setEditorContent(state, action) {
       const contentData = action.payload
-      state.editorFileContent = contentData
+      let transfered = transferString(contentData[1])
+     
+      state.editorFileContent = transfered
     }
   },
 });

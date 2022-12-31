@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +8,8 @@ import { modalDocAction } from "../../redux/action/modalsSlice";
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from "@codemirror/lang-sql";
 import { dracula } from "@uiw/codemirror-themes-all";
+import { transferString}  from '../../helpers/formatFile'
+import { editorAction } from "../../redux/action/editorSlice";
 
 const PreviewModal = () => {
   const modalOpen = useSelector((state) => state.modals.modalPreviewOpen);
@@ -22,6 +24,9 @@ const PreviewModal = () => {
   const closeModal = () => {
     dispatch(modalDocAction.closePreviewModal());
   };
+  const saveImport = () => {
+    closeModal()
+  }
 
   return ReactDOM.createPortal(
     <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
@@ -45,13 +50,14 @@ const PreviewModal = () => {
               {/* {importedValue} */}
               <CodeMirror
               theme={dracula}
-                width="100%"
-                height="100%"
+                width="65vw"
+                height="60vh"
                 options={options}
                 extensions={[sql()]}
-                value={importedValue[1]}
+                value={importedValue}
               />
             </Content>
+            <Button onClick={saveImport} >Submit</Button>
           </MotionDiv>
         </Backdrop>
       )}
@@ -74,7 +80,7 @@ const Backdrop = styled(motion.div)`
 `;
 const MotionDiv = styled(motion.div)`
   width: 70vw;
-  height: 55vh;
+  height: 70vh;
   background-color: ${(props) => props.theme.text};
   border-radius: 4px;
   position: relative;
@@ -95,7 +101,7 @@ const Close = styled.button`
 `;
 const Content = styled.div`
   width: 65vw;
-  height: 45vh;
+  height: 60vh;
   color: ${(props) => props.theme.body};
   font-size: ${props => props.theme.fontmd};
   background-color: ${props => `rgba(${props.theme.bodyRgba}, 0.1)`};
@@ -104,4 +110,18 @@ const Content = styled.div`
   margin-top: 2rem;
   overflow-y: auto;
 `;
+const Button = styled.button`
+cursor: pointer;
+  background-color: ${props => props.theme.orange};
+  border: none;
+  width: 4rem;
+  height: 1.5rem ;
+  position: absolute;
+  top: 94%;
+  right: 10%;
+
+  &:hover{
+    background-color: ${props => props.theme.type};
+  }
+`
 export default PreviewModal;

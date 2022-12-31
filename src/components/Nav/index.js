@@ -11,7 +11,7 @@ import { useDispatch} from "react-redux";
 import { modalDocAction } from "../../redux/action/modalsSlice";
 import { editorAction } from "../../redux/action/editorSlice";
 
-const Navbar = () => {
+const Navbar = ({toPDF, toPNG}) => {
   const input = useInput("");
   const dispatch= useDispatch()
 
@@ -46,6 +46,7 @@ const Navbar = () => {
         <Dropdown title="Export" icon={<BsDownload className="icon" />}>
           <button>To .sql file</button>
           <button>To PNG</button>
+          <button>To PDF</button>
         </Dropdown>
       </Button>
       <Button onClick={toggleDocumentModel} >Document</Button>

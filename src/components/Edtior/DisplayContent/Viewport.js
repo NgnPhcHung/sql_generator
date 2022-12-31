@@ -203,7 +203,7 @@ const Viewport = () => {
                     stroke: "#CCCCCC",
                   }}
                   lineColor="#CCCCCC"
-                  strokeWidth={3}
+                  strokeWidth={1.5}
                   endAnchor={['left','right']}
                   startAnchor={['left','right']}
                 />

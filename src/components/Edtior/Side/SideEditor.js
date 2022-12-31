@@ -8,32 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { editorAction } from "../../../redux/action/editorSlice";
 
 const SideEditor = (props) => {
+  const editorFileContent = useSelector(state => state.editor.editorFileContent)
   const [loading, setLoading] = useState(true);
   const [tables, setTables] = useState([]);
-  const regex = /(.*){(.*)}/i;
   const lineRegex = /[^a-zA-Z]/g;
-  const regexForeign = /[^}]+$/;
+  const regex = /(.*)\((.*)\)/i;
+  const regexForeign = /[^)]+$/;
   const monaco = useMonaco();
   const editorRef = useRef(null);
   const dispatch = useDispatch();
-  let sampleText = `Create user{ 
-  id: char unique PrimaryKey,
-  firstname: varchar,
-  lastname: varchar,
-  dateofbirth: date,
-  address: varchar,
-}
-Create dogtor{ 
-  id: char PrimaryKey,
-  firstname: char,
-}
-Create host{ 
-  id: char PrimaryKey,
-  address: varchar,
-}
-Foreign host.id >> user.id,
-Foreign dogtor.firstname -- host.address
-`;
+
+  const [defaultValue, setDefaultValue] = useState('')
 
   const formatValue = (value) => {
     let mulipleValue = lineRegex.exec(value);
@@ -51,6 +36,7 @@ Foreign dogtor.firstname -- host.address
       foreign.push(classArr);
     });
     dispatch(editorAction.editForeign(foreign));
+
     return splited;
   };
   const onChange = (changeValue) => {
@@ -60,10 +46,13 @@ Foreign dogtor.firstname -- host.address
       let nameFlag = 0;
       let entityFlag = 0;
 
-      let regexValue = regex.exec(v);
+      var reg = /\(([^}]*)\)/g;
+      let regexValue = v;
       if (regexValue !== null) {
-        let tableName = regexValue[1];
-        let tableEntity = regexValue[2];
+        let tableName = regexValue.substring(0, regexValue.indexOf(' '));
+        var result = regexValue.substring(regexValue.indexOf(' ') +1).slice(1,-1);
+        let tableEntity = result;
+
         temp.push({ tableName, tableEntity });
 
         if (tableName !== null && tableEntity !== null) {
@@ -259,9 +248,29 @@ Foreign dogtor.firstname -- host.address
   }, [monaco]);
 
   useEffect(() => {
+    let sampleText = `Create user( 
+  id: char unique PrimaryKey,
+  firstname: varchar,
+  lastname: varchar,
+  dateofbirth: date,
+  address: varchar,
+)
+Create dogtor( 
+  id: char PrimaryKey,
+  firstname: char,
+)
+Create host( 
+  id: char PrimaryKey,
+  address: varchar,
+)
+Foreign host.id >> user.id,
+Foreign dogtor.firstname -- host.address
+    `;
     setLoading(true);
+    editorFileContent ? setDefaultValue(editorFileContent):setDefaultValue(sampleText)
+    
     if (monaco) setLoading(false);
-  }, [monaco]);
+  }, [editorFileContent, monaco]);
 
   return loading ? (
     <ScaleLoader />
@@ -273,7 +282,7 @@ Foreign dogtor.firstname -- host.address
           width="45vw"
           theme="mylang-theme"
           language="mylang"
-          defaultValue={sampleText}
+          value={defaultValue}
           onChange={onChange}
           onMount={editorDidMount}
         />
